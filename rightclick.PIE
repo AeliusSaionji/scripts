@@ -1,0 +1,22 @@
+﻿var.x = touchpad.x
+//Zero values if finger is not touching
+if touchpad.FingerPresent == false
+var.x = 0
+var.trigger = 0
+endif
+//finger touching left region
+if var.x < .4 && var.x > 0
+var.trigger = 1
+endif
+//Dragging from left to right does not activate right click
+if var.x > .4 && var.x < .6
+var.trigger = 0
+endif
+//X is greater than .6 AND the previous nonzero value was less than .4 
+if var.x > .6 && var.trigger == 1
+press(mouse.RightButton)
+release(mouse.RightButton)
+//This code loops quickly, pause so that right click is not sent for every ms "if.." is true 
+wait 300ms
+endif
+

@@ -1,0 +1,42 @@
+﻿touchpad.Swallow = true
+var.x = touchpad.x
+var.y = touchpad.y
+if touchpad.FingerPresent == false
+var.x = 0
+var.y = 0
+var.edge = 3
+var.prev = 0
+var.next = 0
+endif
+
+//Keyboard.PlayPause = Touchpad.LeftButton
+
+//detect right to left swipe
+if var.x > .65 && var.edge != 0
+   var.edge = 1
+   var.next = 1
+endif
+if var.x < .4 && var.x > 0 && var.next = 1 && var.edge = 1
+      Press(Keyboard.NextTrack)
+      wait 200ms
+      Release(Keyboard.NextTrack)
+endif
+//detect left to right swipe
+if var.x < .4 && var.x > 0 && var.edge != 1
+   var.edge = 0
+   var.prev = 1
+endif
+if var.x > .65 && var.prev = 1 && var.edge = 0
+      Press(Keyboard.PrevTrack)
+      wait 200ms
+      Release(Keyboard.PrevTrack)
+endif
+
+
+//Finger in center...
+if var.x > .4 && var.x < .65 && var.edge = 3
+   Press(Keyboard.PlayPause)
+   wait 200ms
+   Release(Keyboard.PlayPause)
+endif
+

@@ -1,0 +1,83 @@
+﻿;touchpad.Swallow = true
+var.x = touchpad.x
+var.y = touchpad.y
+if touchpad.FingerPresent == false
+var.x = 0
+var.y = 0
+var.trigger = 0
+var.trigger1 = 0
+endif
+//finger touching left region
+if var.x < .4 && var.x > 0
+var.trigger = 1
+endif
+//Finger in center...
+if var.x > .4 && var.x < .6 && var.y < .2 && var.trigger == 1
+var.trigger = 2
+endif
+
+if var.y > .7 && var.trigger == 2
+   press(key.Windows)
+   press(key.Down)
+   release(key.Down)
+   release(key.Windows)
+   var.trigger = 0
+   wait 200ms
+endif
+
+if var.x > .4 && var.x < .6 && var.y > .7 && var.trigger == 1
+var.trigger = 3
+endif
+
+if var.y < .2 && var.trigger == 3
+   press(key.Windows)
+   press(key.Up)
+   release(key.Up)
+   release(key.Windows)
+   var.trigger = 0
+   wait 200ms
+endif
+
+
+//If middle region touched... this code loops if right region is held.
+//Wait command makes use feasible.
+if var.x > .4 && var.x < .6 && var.trigger == 1
+press(key.Alt)
+release(key.Alt)
+press(key.Down)
+release(key.Down)
+var.trigger = 4
+wait 200ms
+endif
+
+if var.trigger == 4
+   if delta(var.x) == -.1
+   press(key.Right)
+   release(key.Right)
+   endif
+
+   if delta(var.x) == .1
+   press(key.Left)
+   release(key.Left)
+   endif
+endif
+
+
+
+//Minimize active window if center is tapped twice. or held
+;if var.inc == 50
+;press(key.Windows)
+;press(key.Down)
+;release(key.Down)
+;release(key.Windows)
+;var.inc = 0
+;endif
+//Rewrite this so that it works like; if the difference of x
+//is such that you touch left and then middle, nested if diff y
+//from top to bottom = minimize. bottom to top = max.
+
+//G and H act as PageUp or PageDown if palm rests on touchpad
+if touchpad.FingerPresent == true
+key.PageDown = swallow(key.H)
+key.PageUp   = swallow(key.G)
+endif

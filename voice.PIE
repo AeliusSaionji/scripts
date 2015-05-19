@@ -1,0 +1,24 @@
+﻿If said("GREED",3) then
+   var.voice = 1
+   BeepDefault
+   wait 4s
+   var.voice = 0
+endif
+
+If (var.voice == 1 || HeldDown(swallow(key.AppMenu),500ms)) && said("open explorer") then
+   execute("explorer.exe")
+endif
+
+If var.voice == 1 && said("x fire in game") then
+   press(key.Minus)
+   press(key.Equals)
+   wait 100ms
+   release(key.Equals)
+   release(key.Minus)
+endif
+
+If var.voice == 1 && said("games for windows") then
+   press(key.Home)
+   release(key.Home)
+endif
+

@@ -1,0 +1,267 @@
+﻿/*
+    Wii MotionPlus and IR Mouse                                  v 2011.03.09
+    by lednerg
+
+    Control the mouse with the Wii MotionPlus accessory and the Sensor Bar.
+    You can combine both or just use one or the other.
+    This is just meant to be used in Windows, not for FPS games.
+    
+    Requires GlovePIE version .42 or higher.
+
+    Leave the Wiimote on your desk when starting so it can calibrate.
+    Wait until only the first LED is lit.
+    When using MotionPlus with Sensor Bar,
+      move the pointer back and forth diagonally so it can adjust itself.
+    If there is a lot of drift from the MotionPlus, press Home to re-calibrate.
+
+    A = Left-Click, Plus = Right-Click, Minus = Middle-Click
+    B = Hold mouse still
+    Double-Click B = Reset mouse to center
+    2 + Roll Wiimote = Adjust zoom 
+    Home = Re-calibrate
+*/
+
+// ==== Buttons ================================================================
+
+var.LeftMouseButton = wiimote.A
+var.RightMouseButton = wiimote.Plus
+var.MiddleMouseButton = wiimote.Minus
+keyboard.0 = Wiimote.Up
+key.p = wiimote.Down
+key.o = wiimote.Left
+key.leftbracket = wiimote.Right
+
+var.HoldButton = wiimote.B                   // Holds mouse still
+var.ResetButton = DoubleClicked(wiimote.B)   // Resets mouse to center
+var.ZoomButton = wiimote.Two                 // Hold and then roll to zoom
+var.RecalibrateButton = wiimote.Home         // Press and place Wiimote down
+
+// ==== Options ================================================================
+
+GlovePIE.FrameRate = 100hz
+
+var.Zoom = 1.20                          
+var.MaxSmooth = 95
+var.IgnoreSensorBar = true
+
+// ==== Script =================================================================
+if HeldDown(not starting, 2s) and (var.started = false) and wiimote.Exists then toggle(var.started)
+if wiimote.Exists = false then var.started = false
+if pressed(var.RecalibrateButton) or delta(var.started) {
+   // Don't bother changing any of these numbers.
+   var.wmCalYP = [ 0, 2 ]
+   var.wmDeadZone = 0
+   toggle(var.wmCalON)
+   [ var.wm_x, var.wm_y ] = [ .5, .5 ]
+   [ var.WMIR_x, var.WMIR_y ] = [ 0, 0 ]
+   [ var.wmMin_x, var.wmMax_x ] = [ .365, .635 ]
+   [ var.irMin_x, var.irMax_x ] = [ .333, .667 ]
+   [ var.wmMin_y, var.wmMax_y ] = [ .400, .600 ]
+   [ var.irMin_y, var.irMax_y ] = [ .333, .667 ] 
+   [ var.Hold_x, var.Hold_y ] = [ 0, 0 ]
+   [ var.Recenter_x, var.Recenter_y ] = [ 0, 0 ]
+}
+// ### Calibration
+if var.wmCalON = true {
+   var.wmCalDiff = EnsureMapRange(|var.wmCalYP|, 0, 1, .01, .5)
+   [ var.wmCalYaw, var.wmCalPitch ] = [ var.wmCalYaw, var.wmCalPitch ] * (1-var.wmCalDiff) + var.wmSpeedYP_IN * var.wmCalDiff
+   var.wmStill = |var.wmCalYP| < 2 // this will be true while wiimote is ready to be calibrated.
+   var.wmMoved = var.wmMoved * .95 + ((|var.wmCalYP|<3)* |var.wmCalYP|) * .05
+   if var.wmMoved < .0001 then var.wmDeadZone = 0
+   if HeldDown(var.wmStill, 2s) and |var.wmCalYP| > var.wmDeadZone then var.wmDeadZone = |var.wmCalYP|
+   if HeldDown(var.wmStill, 5s) then toggle(var.wmCalON)
+   if smooth(|wiimote.MotionPlus.RawYawSpeed|, 29) = 0 then var.wmCalYaw = 0
+   if smooth(|wiimote.MotionPlus.RawPitchSpeed|, 29) = 0 then var.wmCalPitch = 0
+}
+// ### Cancel calibration after 15 seconds and reset variables
+if HeldDown(var.wmCalON, 15s) and not HeldDown(var.wmStill, 2s) {
+   var.wmCalYaw = 0
+   var.wmCalPitch = 0
+   var.wmDeadZone = 0
+   toggle(var.ErrorON)
+   toggle(var.wmCalON)
+}
+// ### Calibration LED Countdown - resets when wiimote is moved
+if var.wmCalON then wiimote.Leds = 15 - HeldDown(var.wmStill, 1s) * 1 - HeldDown(var.wmStill, 2s) * 2 - HeldDown(var.wmStill, 3s) * 4 - HeldDown(var.wmStill, 4s) * 8 else wiimote.Leds = 1 + var.ErrorLED
+// ### LED Error Flash
+if var.ErrorON {
+   var.ErrorLED = ( var.ErrorLED <= 0 ) * 14 - ( var.ErrorLED > 0 ) * 1
+   wait .1s
+   var.ErrorON = var.ErrorON - .02 // (when var.ErrorON reaches .5 it will be false)
+else
+   if starting then var.ErrorLED = 15
+   if var.started then var.ErrorLED = 0
+}
+// ### Roll - Combines accelerometer and gyroscope roll measurements
+var.aRoll_360 = var.aRoll_360 - ((delta(wiimote.Roll) > 100) * 360) + ((delta(wiimote.Roll) < -100) * 360)
+var.aRoll_diff = EnsureMapRange(abs(wiimote.Roll - var.aRoll_deg), 1, 10, .01, .05)
+var.aRoll_deg = var.aRoll_deg * (1 - var.aRoll_diff) + (wiimote.Roll + var.aRoll_360) * var.aRoll_diff
+var.aRoll = RemoveUnits(var.aRoll_deg)
+var.gRoll = ( var.Roll + delta(RemoveUnits(wiimote.MotionPlus.GyroRoll)))
+var.gaMinus = abs(var.gRoll - var.aRoll)
+if HeldDown(var.gaMinus>3, 1s) then var.g_to_aRoll = true
+if var.g_to_aRoll = true then var.g_to_aRoll = (var.gaMinus > .1)
+if var.g_to_aRoll = true then var.gRoll = var.gRoll + ( - ((var.gRoll - var.aRoll)>0) * var.gaMinus * .1 + ((var.gRoll - var.aRoll)<0) * var.gaMinus * .1 )
+var.Roll = var.aRoll * (var.gaMinus<.5) + var.gRoll * (var.gaMinus>.5)
+// ### Wii MotionPlus - Converts [ angle & speed ] to [ X & Y ]. Accounts for Roll.
+var.wmSpeedYP_IN = [ wiimote.MotionPlus.RawYawSpeed, wiimote.MotionPlus.RawPitchSpeed ]
+var.wmCalYP = var.wmSpeedYP_IN - [ var.wmCalYaw, var.wmCalPitch ]
+if var.wmCalYP < var.wmDeadZone then var.wmSpeedYP = [ 0, 0 ] else var.wmSpeedYP = var.wmCalYP
+[ var.wmSpeedYaw, var.wmSpeedPitch ] = var.wmSpeedYP / RemoveUnits(PIE.FrameRate)
+var.wmAngle = atan2(var.wmSpeedYaw, -var.wmSpeedPitch) - var.Roll
+var.wmSpeed = [ var.wmSpeedYaw, -var.wmSpeedPitch ]
+[ var.wmRollFix_x, var.wmRollFix_y ] = [ sin(var.wmAngle), cos(var.wmAngle) ] * |var.wmSpeed|
+if var.started = true and var.wmCalON = false {
+   [ var.wm_x, var.wm_y ] = [ var.wm_x, var.wm_y ] + [ var.wmRollFix_x, var.wmRollFix_y ] * .015
+   if var.started = true {
+      var.wmSpeed_x = var.wmSpeed_x * .8 + abs(delta(var.wm_x)) * 1000
+      var.wmSpeed_y = var.wmSpeed_y * .8 + abs(delta(var.wm_y)) * 1000
+      var.wmSpeed_xy = [ var.wmSpeed_x, var.wmSpeed_y ]
+   }
+}
+// ### IR Sensor Bar
+if wiimote.dot1vis and wiimote.dot2vis and not var.IgnoreSensorBar {
+   // Resets Hold and Recentering when IR is seen for the first time
+   if var.UsedIR = false {
+      [ var.Hold_x, var.Hold_y ] = [ 0, 0 ]
+      [ var.Recenter_x, var.Recenter_y ] = [ 0, 0 ]
+      var.UsedIR = true
+   }
+   // Finds mid-point of dot1 and dot2
+   var.irDot1_xy = [ (512 - wiimote.dot1x) / 1024, (wiimote.dot1y - 384) / 768 ]
+   var.irDot2_xy = [ (512 - wiimote.dot2x) / 1024, (wiimote.dot2y - 384) / 768 ]
+   [ var.irMid_x, var.irMid_y ] = ( var.irDot1_xy + var.irDot2_xy ) / 2
+   // Finds angle of dots for Roll
+   var.irMid_angle = atan2( var.irMid_x, var.irMid_y )
+   var.irMid_length = [ var.irMid_x, var.irMid_y ]
+   var.irNew_angle = var.irMid_angle - var.Roll
+   var.irNew_xy = [ sin(var.irNew_angle) , cos(var.irNew_angle) ] * |var.irMid_length|
+   [ var.ir_x, var.ir_y ] = var.irNew_xy + [ .5, .5 ]
+   var.irSpeed_x = var.irSpeed_x * .8 + abs(delta(var.ir_x)) * 1000
+   var.irSpeed_y = var.irSpeed_y * .8 + abs(delta(var.ir_y)) * 1000
+   var.irSpeed_xy = [ var.irSpeed_x , var.irSpeed_y ]
+   // Matches IR and Wii MotionPlus Position and Scale
+   if (var.irSpeed_x < 40 and var.wmSpeed_x < 40) {
+      if ((var.ir_x < var.irMin_x) or (var.MinMax_x = 2 and (var.irMax_x - var.ir_x) >= .15)) and ((var.wmMax_x - var.wm_x) > .075) {
+         [ var.wmMin_x, var.irMin_x ] = [ var.wm_x, var.ir_x ]
+         var.MinMax_x = 1
+      }
+      if ((var.ir_x > var.irMax_x) or (var.MinMax_x = 1 and (var.ir_x - var.irMin_x) >= .15)) and ((var.wm_x - var.wmMin_x) > .075) {
+         [ var.wmMax_x, var.irMax_x ] = [ var.wm_x, var.ir_x ]
+         var.MinMax_x = 2
+      }
+   }
+   if (var.irSpeed_y < 40 and var.wmSpeed_y < 40) {
+      if ((var.ir_y < var.irMin_y) or (var.MinMax_y = 2 and (var.irMax_y - var.ir_y) >= .15)) and ((var.wmMax_y - var.wm_y) > .075) {
+         [ var.wmMin_y, var.irMin_y ] = [ var.wm_y, var.ir_y ]
+         var.MinMax_y = 1
+      }
+      if ((var.ir_y > var.irMax_y) or (var.MinMax_y = 1 and (var.ir_y - var.irMin_y) >= .15)) and ((var.wm_y - var.wmMin_y) > .075) {
+         [ var.wmMax_y, var.irMax_y ] = [ var.wm_y, var.ir_y ]
+         var.MinMax_y = 2
+      }
+   }
+   if var.WMIR_switch = 1 {
+      [ var.IR_adj_x , var.IR_adj_y ] = [ var.Old_WM_x, var.Old_WM_y ] - [ var.ir_x, var.ir_y ]
+      var.WMIR_switch = 0
+   }
+   if var.WMIR_switch = 0 {
+      [ var.Rough_x , var.Rough_y ] = ([ var.ir_x, var.ir_y ] + [ var.IR_adj_x , var.IR_adj_y ] - [ .5, .5 ]) * var.NewZoom + [ .5, .5 ]
+      [ var.WMIR_x, var.WMIR_y ] = [ var.wmNew_x , var.wmNew_y ] - [ var.ir_x , var.ir_y ]
+      var.WMIR_xy = [ var.WMIR_x, var.WMIR_y ]
+      var.IR_adj_c = 1 - EnsureRange(|var.WMIR_xy|, 0, .5) / 5
+      [ var.IR_adj_x , var.IR_adj_y ] = [ var.IR_adj_x , var.IR_adj_y ] * var.IR_adj_c
+   }
+   [ var.WMIR_cal_x, var.WMIR_cal_y ] = [ var.wm_x, var.wm_y ] - [ var.ir_x, var.ir_y ]
+else  // (if no IR dots visible)
+   [ var.Rough_x , var.Rough_y ] = ([ var.wmNew_x, var.wmNew_y ] - [ var.WMIR_x, var.WMIR_y ] + [ var.IR_adj_x , var.IR_adj_y ] - [ .5, .5 ]) * var.NewZoom + [ .5, .5 ]
+   [ var.Old_WM_x, var.Old_WM_y ] = ([ var.Rough_x , var.Rough_y ] - [ .5, .5 ]) / var.NewZoom + [ .5, .5 ]
+   var.WMIR_switch = 1
+   var.WMIR_xy = [ 0, 0 ]
+   if var.started = true and var.wmCalON = false then [ var.ir_x, var.ir_y ] = ([ var.Smooth_x , var.Smooth_y ] - [ .5, .5 ]) / var.NewZoom + [ .5, .5 ]
+}
+// ### WM / IR Ratio Checking
+if (var.ratio = 0) or (var.ratio = 1) or IsNAN(var.ratio) then var.ratio = var.ra
+if var.ra != 1 and abs(delta(var.ra))>0 then var.ratio = var.ratio * var.rb + var.ra * (1-var.rb)
+var.ra = ((var.wmMax_x - var.wmMin_x)/(var.wmMax_y - var.wmMin_y))/((var.irMax_x - var.irMin_x)/(var.irMax_y - var.irMin_y))
+if abs(delta(var.ra))>0 then var.rb = .9975
+if abs(var.ratio - var.ra) < .05 {
+   if ( HeldDown(delta(var.wmMin_x)=0, 2s) = false ) and  ( HeldDown(delta(var.wmMax_x)=0, 2s) = false ) then [ var.wmNewMin_x, var.wmNewMax_x ] = [ var.wmMin_x, var.wmMax_x ]
+   if ( HeldDown(delta(var.wmMin_y)=0, 2s) = false ) and  ( HeldDown(delta(var.wmMax_y)=0, 2s) = false ) then [ var.wmNewMin_y, var.wmNewMax_y ] = [ var.wmMin_y, var.wmMax_y ]
+   if ( HeldDown(delta(var.irMin_x)=0, 2s) = false ) and  ( HeldDown(delta(var.irMax_x)=0, 2s) = false ) then [ var.irNewMin_x, var.irNewMax_x ] = [ var.irMin_x, var.irMax_x ]
+   if ( HeldDown(delta(var.irMin_y)=0, 2s) = false ) and  ( HeldDown(delta(var.irMax_y)=0, 2s) = false ) then [ var.irNewMin_y, var.irNewMax_y ] = [ var.irMin_y, var.irMax_y ]
+}
+// ### Map WM to IR
+var.wmNew_x = MapRange( var.wm_x, var.wmNewMin_x, var.wmNewMax_x, var.irNewMin_x, var.irNewMax_x  )
+var.wmNew_y = MapRange( var.wm_y, var.wmNewMin_y, var.wmNewMax_y, var.irNewMin_y, var.irNewMax_y  )
+// ### Mouse Movement Smoothing
+if IsInfinite(var.Smooth_x + var.Smooth_y) or IsNaN(var.Smooth_x + var.Smooth_y) then [ var.Smooth_x , var.Smooth_y ] = [ var.Rough_x , var.Rough_y ]
+var.Smooth_delta = [ delta(var.Rough_x) , delta(var.Rough_y) ]
+var.Smooth_c = EnsureRange(var.Smooth_c * .95 + (|var.Smooth_delta| * 100) * .05 , 1-EnsureRange(sqrt(var.MaxSmooth)/10, .00001, .99999), 1)
+if IsInfinite(var.Smooth_c) or IsNaN(var.Smooth_c) then var.Smooth_c = 1
+[ var.Smooth_x, var.Smooth_y ] = [ var.Smooth_x, var.Smooth_y ] * (1-var.Smooth_c) + [ var.Rough_x , var.Rough_y ] * var.Smooth_c
+// ### Zoom Button
+if delta(var.ZoomButton) then var.ZoomFrom = var.Roll/500
+if var.ZoomButton then var.ZoomShift = var.ZoomShift + delta(var.Roll)/500 //(var.Roll/500 - var.ZoomFrom)
+var.NewZoom = EnsureRange(var.Zoom + var.ZoomShift, .01, 100)
+// ### Zoom Cursors
+[ cursor1.Visible, cursor7.Visible ] = [ 1, 1 ] * var.ZoomButton + [ 1, 1 ] * KeepDown(delta(var.ZoomButton)<0, 1 second)
+[ cursor13.Visible, cursor19.Visible ] = [ 1, 1 ] * var.ZoomButton + [ 1, 1 ] * KeepDown(delta(var.ZoomButton)<0, 1 second)
+[ cursor1.x, cursor1.y ] = [ -.5, 0 ] * var.NewZoom + [ .5, .5 ]
+[ cursor7.x, cursor7.y ] = [ -.16666, 0 ] * var.NewZoom + [ .5, .5 ]
+[ cursor13.x, cursor13.y ] = [ .16666, 0 ] * var.NewZoom + [ .5, .5 ]
+[ cursor19.x, cursor19.y ] = [ .5, 0 ] * var.NewZoom + [ .5, .5 ]
+// ### Reset, Hold, and Mouse
+if var.ResetButton then [ var.Recenter_x, var.Recenter_y ] = [ var.Smooth_x, var.Smooth_y ] - [ var.Hold_x, var.Hold_y ] - [ .5, .5 ]
+if var.started and wiimote.Exists and not var.wmCalON {
+   if not HeldDown(var.HoldButton, 50ms) {
+      [ mouse.x, mouse.y ] = [ var.Smooth_x, var.Smooth_y ] - [ var.Recenter_x, var.Recenter_y ] - [ var.Hold_x, var.Hold_y ]
+   else
+      [ var.Hold_x, var.Hold_y ] = [ var.Smooth_x, var.Smooth_y ] - [ var.Recenter_x, var.Recenter_y ] - [ mouse.x, mouse.y ]
+   }
+   space = var.LeftMouseButton
+   RightAlt = var.RightMouseButton
+   RightBracket = var.MiddleMouseButton
+}
+// ### Battery Test
+if var.wmCalON = false and delta(var.wmCalON) {
+   var.Battery = EnsureRange(wiimote.Battery / 1.92, 0, 100)
+   if var.Battery < 15 then var.BattDebug = "  ### LOW BATTERY ###  "+ var.Battery +"%" else var.BattDebug = " Battery: "+ var.Battery +"%"
+}
+// ### Debug
+if (var.wmCalON = true) or (var.BattDebug = 0) then var.BattDebug = ""
+if var.UseCalDebug = 0 then var.UseCalDebug = ""
+if (var.wmCalON = true) or (var.started = false) then var.ZoomDebug = "" else var.ZoomDebug = " Zoom: "+ var.NewZoom
+if (abs(var.wmCalYaw) + abs(var.wmCalPitch) + abs(var.wmDeadZone) > 0.01) and (var.started and not var.wmCalON) {
+   var.UseCalDebug = "  * Secondary Calibration *     Out: "+ var.wmSpeedYP +"   Cal: "+ [ var.wmCalYaw, var.wmCalPitch ] +"   In: "+ var.wmSpeedYP_IN +"   DeadZone: "+ var.wmDeadZone
+   if delta(var.wmCalON)<0 then var.ErrorON = 0.54
+elseif (abs(var.wmCalYaw) + abs(var.wmCalPitch) + abs(var.wmDeadZone) <= 0.01) and ( var.started and not var.wmCalON)
+   var.UseCalDebug = "  Default GlovePIE Calibration"
+elseif var.wmCalON
+   var.UseCalDebug = "   ### CALIBRATING ###         Place the Wiimote down "
+}
+debug = var.BattDebug +"    "+ var.ZoomDebug +"    "+ var.UseCalDebug
+
+/*
+// ### Debug Cursors
+var.debugCursors = false
+if var.debugCursors = true and var.started = true and var.wmCalON = false {
+   [ cursor3.Visible, cursor9.Visible ] = [ true, true ]
+   [ cursor15.Visible, cursor21.Visible ] = [ true, true ]
+   [ cursor2.Visible, cursor8.Visible ] = [ true, true ]
+   [ cursor14.Visible, cursor20.Visible ] = [ true, true ]
+   [ cursor3.x, cursor3.y ] = [ var.wmNewMin_x, var.wmNewMin_y ] - [ var.WMIR_cal_x, var.WMIR_cal_y ]
+   [ cursor9.x, cursor9.y ] = [ var.wmNewMax_x, var.wmNewMin_y ] - [ var.WMIR_cal_x, var.WMIR_cal_y ]
+   [ cursor15.x, cursor15.y ] = [ var.wmNewMax_x, var.wmNewMax_y ] - [ var.WMIR_cal_x, var.WMIR_cal_y ]
+   [ cursor21.x, cursor21.y ] = [ var.wmNewMin_x, var.wmNewMax_y ] - [ var.WMIR_cal_x, var.WMIR_cal_y ]
+   [ cursor2.x, cursor2.y ] = [ var.irNewMin_x, var.irNewMin_y ]
+   [ cursor8.x, cursor8.y ] = [ var.irNewMax_x, var.irNewMin_y ]
+   [ cursor14.x, cursor14.y ] = [ var.irNewMax_x, var.irNewMax_y ]
+   [ cursor20.x, cursor20.y ] = [ var.irNewMin_x, var.irNewMax_y ]
+else
+   [ cursor3.Visible, cursor9.Visible ] = [ false, false ]
+   [ cursor15.Visible, cursor21.Visible ] = [ false, false ]
+   [ cursor2.Visible, cursor8.Visible ] = [ false, false ]
+   [ cursor14.Visible, cursor20.Visible ] = [ false, false ]
+}
+*/

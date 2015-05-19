@@ -1,0 +1,45 @@
+﻿If Pressed(key.CapsLock) && var.yourmom == 0 then
+    var.yourmom = 1
+elseif pressed(key.CapsLock) && var.yourmom == 1 then
+   var.yourmom = 0
+endif
+
+If var.yourmom == 1 then
+//   swallow(Key.F1)
+//   swallow(key.F2)
+//   swallow(key.F3)
+//   swallow(key.F4)
+   key.PrevTrack  = swallow(key.F5)
+   key.PlayPause  = swallow(key.F6)
+   key.Stop       = swallow(key.F7)
+   key.NextTrack  = swallow(key.F8)
+   key.VolumeDown = swallow(key.F9)
+   key.VolumeUp   = swallow(key.F10)
+   key.Mute       = swallow(key.F11)
+   key.PageDown   = swallow(key.Down)
+   key.PageUp     = swallow(key.Up)
+//   swallow(key.F12)
+endif
+
+var.x = touchpad.x
+//Zero values if finger is not touching
+if touchpad.FingerPresent == false
+var.x = 0
+var.trigger = 0
+endif
+//finger touching left region
+if var.x < .4 && var.x > 0
+var.trigger = 1
+endif
+//Dragging from left to right does not activate right click
+if var.x > .4 && var.x < .6
+var.trigger = 0
+endif
+//X is greater than .6 AND the previous nonzero value was less than .4 
+if var.x > .6 && var.trigger == 1
+press(mouse.RightButton)
+release(mouse.RightButton)
+//This code loops quickly, pause so that right click is not sent for every ms "if.." is true 
+wait 300ms
+endif
+
