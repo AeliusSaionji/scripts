@@ -1,0 +1,6 @@
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+
+
+Reg Expand Sz: DisabledHotkeys
+
+A value of 1 disables Win+1, a value of 12 disables both Win+1 and Win+2, a single space will disable Win+Space.
