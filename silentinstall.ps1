@@ -59,6 +59,11 @@ Write-Host "Downloading and installing paint.net..."
 Write-Host "Hamachi's fucking MSI is fucking retarded so I will not be using the fucking silent option and apparently it fucking pings google every time you install it"
 
 Write-Host "Downloading and installing Virustotal uploader, honeyview and vistaswitcher..."
+
+Write-Host "Downloading and installing GitHub..."
+	$webclient.DownloadFile( "https://github-windows.s3.amazonaws.com/GitHubSetup.exe", "$ENV:TEMP\GitHubSetup.exe" )
+	Start-Process "$ENV:TEMP\GitHubSetup.exe"
+
 Write-Warning "honeyview, vistaswitcher, msysgit and vtuploader don't have silent installs"
 	$webclient.DownloadFile( "https://www.virustotal.com/static/bin/vtuploader2.2.exe", "$Env:TEMP\vtuploader2.2.exe" )
 	$webclient.DownloadFile( "http://www.bandisoft.com/honeyview/dl.php?web", "$Env:TEMP\honeyview.exe" )
