@@ -55,8 +55,6 @@ Write-Host "Downloading and installing paint.net..."
 $webclient.DownloadFile( "http://www.dotpdn.com/files/paint.net.4.0.5.install.zip", "$Env:TEMP\paint.net.4.0.5.install.zip" )
 
 Write-Host "Hamachi's fucking MSI is fucking retarded so I will not be using the fucking silent option and apparently it fucking pings google every time you install it"
-$webclient.DownloadFile( "https://secure.logmein.com/addacomputer3_msi.aspx?pc=h&deployid=A2236141-E668-4801-B2A7-0601199B39DB&emaillist=link68759@hotmail.com", "$Env:TEMP\hamachi.msi" )
-Start-Process "$Env:TEMP\hamachi.msi"
 
 Write-Host "Downloading and installing Virustotal uploader, msysgit, honeyview and vistaswitcher..."
 Write-Warning "honeyview, vistaswitcher, msysgit and vtuploader don't have silent installs"
