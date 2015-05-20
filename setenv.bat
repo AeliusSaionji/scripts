@@ -37,6 +37,7 @@ setx Music %My_Path%\Music
 setx OneDrive %My_Path%\OneDrive
 setx Pictures %My_Path%\Pictures
 setx Videos %My_Path%\Videos
+setx PATH "%PATH%;%LOCALAPPDATA%\GitHub\PortableGit_c2ba306e536fdf878271f7fe636a147ff37326ad\bin"
 set GitHub=%My_Path%\GitHub
 set OneDrive=%My_Path%\OneDrive
 MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\.irssi" "%GitHub%\dotfiles\home\Link\.irssi"
