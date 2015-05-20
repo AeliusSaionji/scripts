@@ -29,5 +29,5 @@ MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\.irssi" "%ONEDRIVE%\Misc Utils\i
 MKLINK /J "%HOMEDRIVE%%HOMEPATH%\pentadactyl" "%ONEDRIVE%\Misc Utils\Firefox backup\pentadactyl"
 PowerShell -Command Start-Process "\"PowerShell\" \"Copy-Item $Env:OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -Destination C:\\Windows\"" -Verb runas
 elevate -c MKLINK "%HOMEDRIVE%%HOMEPATH%\_pentadactylrc" "%ONEDRIVE%\Misc Utils\Firefox backup\_pentadactylrc"
-elevate -c MKLINK "%HOMEDRIVE%%HOMEPATH%\.vimrc" "%ONEDRIVE%\Misc Utils\.vimrc"
+elevate -c MKLINK "%HOMEDRIVE%%HOMEPATH%\.vimrc" "%GitHub%\dotfiles\home\Link\.vimrc"
 Powershell -Command Start-Process "\"PowerShell\" \"Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned\" -Verb Runas
