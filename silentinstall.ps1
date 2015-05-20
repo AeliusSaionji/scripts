@@ -13,7 +13,7 @@
 # set wallpaper
 # set taskbar settings
 # hide desktop icons
-# altdrag
+# regs
 
 if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") ) {
 	COPY .\silentinstall.ps1 $Env:PUBLIC
