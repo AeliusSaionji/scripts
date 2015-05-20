@@ -13,6 +13,8 @@ IF %COMPUTERNAME% EQU NERV (
 	MKLINK /H "H:\Roaming\Mozilla\Firefox\Profiles\zvybsi3a.Link\permissions.sqlite" "H:\OneDrive\Misc Utils\Firefox backup\permissions.sqlite"
 	H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK "%HOMEDRIVE%%HOMEPATH%\.pentadactylrc" "H:\GitHub\dotfiles\home\Link\.pentadactylrc"
 	H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK "%HOMEDRIVE%%HOMEPATH%\.vimrc" "H:\GitHub\dotfiles\home\Link\.vimrc"
+	H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK "%windir%\lua52.dll" "H:\OneDrive\MISCUT~1\lua52.dll"
+	H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK "%windir%\elevate.exe" "H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe"
 ) else (
 	set My_Path=%HOMEDRIVE%%HOMEPATH%
 	COPY %HOMEDRIVE%%HOMEPATH%\GitHub\scripts\EasyWindowDrag.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup"
@@ -27,6 +29,8 @@ IF %COMPUTERNAME% EQU NERV (
 	MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\dcc" "%HOMEDRIVE%%HOMEPATH%\Desktop\dcc"
 	MKLINK /J "%APPDATA%\Mozilla\Firefox\Profiles\zvybsi3a.Link\searchplugins" "%HOMEDRIVE%%HOMEPATH%\GitHub\dotfiles\home\Link\.mozilla\searchplugins"
 	MKLINK /J "%APPDATA%\Mozilla\Firefox\Profiles\zvybsi3a.Link\requestpolicy" "%HOMEDRIVE%%HOMEPATH%\OneDrive\Misc Utils\Firefox backup\requestpolicy"
+	%HOMEDRIVE%%HOMEPATH%\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK /H "%windir%\lua52.dll" "%HOMEDRIVE%%HOMEPATH%\OneDrive\MISCUT~1\lua52.dll"
+	%HOMEDRIVE%%HOMEPATH%\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK /H "%windir%\elevate.exe" "%HOMEDRIVE%%HOMEPATH%\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe"
 	)
 
 setx Desktop %My_Path%\Desktop
@@ -43,5 +47,4 @@ set OneDrive=%My_Path%\OneDrive
 MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\.irssi" "%GitHub%\dotfiles\home\Link\.irssi"
 MKLINK /J "%HOMEDRIVE%%HOMEPATH%\pentadactyl" "%GitHub%\dotfiles\home\Link\.pentadactyl"
 
-PowerShell -Command Start-Process "\"PowerShell\" \"Copy-Item $Env:OneDrive\\MISCUT~1\\ELEVAT~1.0-R\\BIN~2.X86\\elevate.exe -Destination C:\\Windows\"" -Verb runas
 Powershell -Command Start-Process "\"PowerShell\" \"Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned\" -Verb Runas
