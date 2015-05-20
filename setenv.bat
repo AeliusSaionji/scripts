@@ -37,8 +37,9 @@ setx Music %My_Path%\Music
 setx OneDrive %My_Path%\OneDrive
 setx Pictures %My_Path%\Pictures
 setx Videos %My_Path%\Videos
+set GitHub=%My_Path%\GitHub
 set OneDrive=%My_Path%\OneDrive
-MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\.irssi" "%ONEDRIVE%\Misc Utils\irssi\.irssi"
+MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\.irssi" "%GitHub%\dotfiles\home\Link\.irssi"
 MKLINK /J "%HOMEDRIVE%%HOMEPATH%\pentadactyl" "%GitHub%\dotfiles\home\Link\.pentadactyl"
 
 PowerShell -Command Start-Process "\"PowerShell\" \"Copy-Item $Env:OneDrive\\MISCUT~1\\ELEVAT~1.0-R\\BIN~2.X86\\elevate.exe -Destination C:\\Windows\"" -Verb runas
