@@ -15,6 +15,7 @@
 # set taskbar settings
 # hide desktop icons
 # regs
+# putty shortcut, or other means of ssh
 
 if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") ) {
 	Write-Host "Updating Shell Paths"
