@@ -5,7 +5,6 @@
 #		https://gallery.technet.microsoft.com/scriptcenter/b2aee1a5-1163-43c5-b3cf-fef42629e4ec
 #	Configure internet explorer
 # 	Shortcut transfer from root to global
-# 	Put ahk script in place, autostart
 #   AHK's thingy for admin stuff
 #   WinX 
 
