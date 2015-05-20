@@ -12,7 +12,8 @@
 # 	git installs vim: AppData\Local\GitHub\PortableGit_c2ba306e536fdf878271f7fe636a147ff37326ad\share\vim\vim74
 # set wallpaper
 # set taskbar settings
-# 
+# hide desktop icons
+# altdrag
 
 if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") ) {
 	COPY .\silentinstall.ps1 $Env:PUBLIC
