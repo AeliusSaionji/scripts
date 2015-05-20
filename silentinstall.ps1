@@ -1,4 +1,3 @@
-# This is meant to be run as root.
 # Todo
 # 	Configuration migration
 # 	Configure paths (move desktop and downloads and etc to d:\)
