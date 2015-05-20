@@ -196,5 +196,3 @@ Xbutton1 & WheelDown::AltTab
 #IfWinActive , poop
 	Xbutton1::q
 return
-
-;#e::Run, "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
