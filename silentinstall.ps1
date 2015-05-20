@@ -58,21 +58,17 @@ Write-Host "Downloading and installing paint.net..."
 
 Write-Host "Hamachi's fucking MSI is fucking retarded so I will not be using the fucking silent option and apparently it fucking pings google every time you install it"
 
-Write-Host "Downloading and installing Virustotal uploader, honeyview and vistaswitcher..."
-
-Write-Host "Downloading and installing GitHub..."
+Write-Host "Downloading and installing GitHub, Honeyview, Vistaswitcher, and Vtuploader..."
+Write-Warning "GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
 	$webclient.DownloadFile( "https://github-windows.s3.amazonaws.com/GitHubSetup.exe", "$ENV:TEMP\GitHubSetup.exe" )
-	Start-Process "$ENV:TEMP\GitHubSetup.exe"
-
-Write-Warning "honeyview, vistaswitcher, msysgit and vtuploader don't have silent installs"
-	$webclient.DownloadFile( "https://www.virustotal.com/static/bin/vtuploader2.2.exe", "$Env:TEMP\vtuploader2.2.exe" )
 	$webclient.DownloadFile( "http://www.bandisoft.com/honeyview/dl.php?web", "$Env:TEMP\honeyview.exe" )
 	$webclient.DownloadFile( "http://www.ntwind.com/download/VistaSwitcher_1.1.5-setup.exe", "$Env:TEMP\VistaSwitcher_1.1.5-setup.exe" )
+	$webclient.DownloadFile( "https://www.virustotal.com/static/bin/vtuploader2.2.exe", "$Env:TEMP\vtuploader2.2.exe" )
 # No silent yet
-	Start-Process "$Env:TEMP\vtuploader2.2.exe"
-	Start-Process "$Env:TEMP\VistaSwitcher_1.1.5-setup.exe"
+	Start-Process "$ENV:TEMP\GitHubSetup.exe"
 	Start-Process "$ENV:TEMP\honeyview.exe"
-	Start-Process "$ENV:TEMP\Git-1.9.2-preview20140411.exe"
+	Start-Process "$Env:TEMP\VistaSwitcher_1.1.5-setup.exe"
+	Start-Process "$Env:TEMP\vtuploader2.2.exe"
 }
 
 Remove-Item $Env:PUBLIC\silentinstall.ps1
