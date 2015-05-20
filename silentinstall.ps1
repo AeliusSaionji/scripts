@@ -59,6 +59,7 @@ Write-Host "Hamachi's fucking MSI is fucking retarded so I will not be using the
 
 Write-Host "Downloading and installing GitHub, Honeyview, Vistaswitcher, and Vtuploader..."
 Write-Warning "GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
+	$webclient.DownloadFile( "https://download-installer.cdn.mozilla.net/pub/firefox/releases/38.0.1/win32/en-US/Firefox%20Setup%20Stub%2038.0.1.exe", "$ENV:TEMP\Firefox Setup Stub 38.0.1.exe" )
 	$webclient.DownloadFile( "http://us.download.nvidia.com/GFE/GFEClient/2.4.3.31/GeForce_Experience_v2.4.3.31.exe", "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe" )
 	$webclient.DownloadFile( "https://github-windows.s3.amazonaws.com/GitHubSetup.exe", "$ENV:TEMP\GitHubSetup.exe" )
 	$webclient.DownloadFile( "http://www.bandisoft.com/honeyview/dl.php?web", "$Env:TEMP\honeyview.exe" )
@@ -67,6 +68,7 @@ Write-Warning "GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silen
 	$webclient.DownloadFile( "https://www.virustotal.com/static/bin/vtuploader2.2.exe", "$Env:TEMP\vtuploader2.2.exe" )
 
 # No silent yet
+	Start-Process "$ENV:TEMP\Firefox Setup Stub 38.0.1.exe"
 	Start-Process "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe"
 	Start-Process "$ENV:TEMP\GitHubSetup.exe"
 	Start-Process "$ENV:TEMP\honeyview.exe"
