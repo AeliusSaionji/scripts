@@ -62,11 +62,14 @@ Write-Host "Downloading and installing GitHub, Honeyview, Vistaswitcher, and Vtu
 Write-Warning "GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
 	$webclient.DownloadFile( "https://github-windows.s3.amazonaws.com/GitHubSetup.exe", "$ENV:TEMP\GitHubSetup.exe" )
 	$webclient.DownloadFile( "http://www.bandisoft.com/honeyview/dl.php?web", "$Env:TEMP\honeyview.exe" )
+    $webclient.DownloadFile( "http://download01.logitech.com/web/ftp/pub/techsupport/gaming/LGS_8.58.183_x64_Logitech.exe", "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe" )
 	$webclient.DownloadFile( "http://www.ntwind.com/download/VistaSwitcher_1.1.5-setup.exe", "$Env:TEMP\VistaSwitcher_1.1.5-setup.exe" )
 	$webclient.DownloadFile( "https://www.virustotal.com/static/bin/vtuploader2.2.exe", "$Env:TEMP\vtuploader2.2.exe" )
+
 # No silent yet
 	Start-Process "$ENV:TEMP\GitHubSetup.exe"
 	Start-Process "$ENV:TEMP\honeyview.exe"
+    Start-Process "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe"
 	Start-Process "$Env:TEMP\VistaSwitcher_1.1.5-setup.exe"
 	Start-Process "$Env:TEMP\vtuploader2.2.exe"
 }
