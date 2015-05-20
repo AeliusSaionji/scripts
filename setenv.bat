@@ -1,11 +1,11 @@
 MKDIR %HOMEDRIVE%\cygwin64\home\%USERNAME%
 
 IF %COMPUTERNAME% EQU NERV (
-	set My_Path=D:
-	MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\dcc" "D:\Downloads\dcc"
+	set My_Path=H:
+	MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\dcc" "H:\Downloads\dcc"
 	set GitHub=%My_Path%\GitHub
-	COPY %GitHub%\scripts\General.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup
-	COPY %GitHub%\scripts\rsyncd.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup
+	COPY %GitHub%\scripts\General.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup"
+	COPY %GitHub%\scripts\rsyncd.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup"
 ) else (
 	set My_Path=%HOMEDRIVE%%HOMEPATH%
 	MKDIR %HOMEDRIVE%%HOMEPATH%\Desktop\dcc
