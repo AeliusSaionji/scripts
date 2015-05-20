@@ -8,6 +8,7 @@
 #   AHK's thingy for admin stuff
 #   WinX
 # mpc hc, irfanview borked
+# revo uninstaller
 # gvimx64, freecommander not covered here
 # 	git installs vim: AppData\Local\GitHub\PortableGit_c2ba306e536fdf878271f7fe636a147ff37326ad\share\vim\vim74
 # set wallpaper
@@ -16,6 +17,22 @@
 # regs
 
 if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") ) {
+	Write-Host "Updating Shell Paths"
+	Write-Warning "Downloads, Saved Games, and Searches must be set manually, probably."
+		$key1 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+		$key2 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
+		set-ItemProperty -path $key1 -name AppData "H:\Roaming"
+		set-ItemProperty -path $key2 -name AppData "H:\Roaming"
+		set-ItemProperty -path $key1 -name Desktop "H:\Desktop"
+		set-ItemProperty -path $key2 -name Desktop "H:\Desktop"
+		set-ItemProperty -path $key1 -name "My Music" "H:\Music"
+		set-ItemProperty -path $key2 -name "My Music" "H:\Music"
+		set-ItemProperty -path $key1 -name "My Pictures" "H:\Pictures"
+		set-ItemProperty -path $key2 -name "My Pictures" "H:\Pictures"
+		set-ItemProperty -path $key1 -name "My Video" "H:\Videos"
+		set-ItemProperty -path $key2 -name "My Video" "H:\Videos"
+		set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
+		set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
 	COPY .\silentinstall.ps1 $Env:PUBLIC
 	Start-Process "powershell" "$Env:PUBLIC\silentinstall.ps1" -Verb Runas
 }
@@ -65,7 +82,7 @@ Write-Host "Downloading and installing paint.net..."
 Write-Host "Hamachi's fucking MSI is fucking retarded so I will not be using the fucking silent option and apparently it fucking pings google every time you install it"
 
 Write-Host "Downloading and installing GitHub, Honeyview, Vistaswitcher, and Vtuploader..."
-Write-Warning "GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
+Write-Warning "Firefox, Geforce Experience, GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
 	$webclient.DownloadFile( "https://download-installer.cdn.mozilla.net/pub/firefox/releases/38.0.1/win32/en-US/Firefox%20Setup%20Stub%2038.0.1.exe", "$ENV:TEMP\Firefox Setup Stub 38.0.1.exe" )
 	$webclient.DownloadFile( "http://us.download.nvidia.com/GFE/GFEClient/2.4.3.31/GeForce_Experience_v2.4.3.31.exe", "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe" )
 	$webclient.DownloadFile( "https://github-windows.s3.amazonaws.com/GitHubSetup.exe", "$ENV:TEMP\GitHubSetup.exe" )
