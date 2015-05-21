@@ -19,10 +19,12 @@ WinWait, Swipe finger ahk_class #32770
 Xbutton1 & Wheelup::ShiftAltTab
 Xbutton1 & WheelDown::AltTab
 
-; The magical bugfix. Needed because AHK is fucked up. Without this, mouse alttab will have issues.
-#IfWinActive , poop
-	Xbutton1::q
-return
+;The magical bugfix. Needed because AHK is fucked up. Without this, mouse alttab will have issues.
+;It seems a recent version of AHK now screwed this up. I really need to just dump this language.
+;Xbutton1 + leftclick defocuses a window with this uncommented, and thus breaks my resize function
+;#IfWinActive , poop
+;	Xbutton1::q
+;return
 
 ;#b::
 ;	WinSet, Style, ^0xC40000, A
