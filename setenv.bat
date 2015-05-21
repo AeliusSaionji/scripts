@@ -4,7 +4,6 @@ IF %COMPUTERNAME% EQU NERV (
 	set My_Path=H:
 	COPY H:\GitHub\scripts\General.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
 	COPY H:\GitHub\scripts\rsyncd.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
-	COPY H:\GitHub\scripts\EasyWindowDrag.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
 	MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\dcc" "H:\Downloads\dcc"
 	MKLINK /J "H:\Roaming\Mozilla\Firefox\Profiles\zvybsi3a.Link\searchplugins" "H:\GitHub\dotfiles\home\Link\.mozilla\searchplugins"
 	MKLINK /J "H:\Roaming\Mozilla\Firefox\Profiles\zvybsi3a.Link\requestpolicy" "H:\OneDrive\Misc Utils\Firefox backup\requestpolicy"
@@ -17,7 +16,6 @@ IF %COMPUTERNAME% EQU NERV (
 	H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe -c MKLINK "%windir%\elevate.exe" "H:\OneDrive\MISCUT~1\ELEVAT~1.0-R\BIN~2.X86\elevate.exe"
 ) else (
 	set My_Path=%HOMEDRIVE%%HOMEPATH%
-	COPY %HOMEDRIVE%%HOMEPATH%\GitHub\scripts\EasyWindowDrag.lnk "%APPDATA%\Microsoft\Windows\Start Menu\Programs\startup"
 	MKDIR %HOMEDRIVE%%HOMEPATH%\Desktop\dcc
 	MKDIR %HOMEDRIVE%%HOMEPATH%\Games
 	MKDIR %HOMEDRIVE%%HOMEPATH%\GitHub

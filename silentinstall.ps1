@@ -55,6 +55,9 @@ Write-Host "Downloading and installing sumatrapdf..."
 Write-Host "Downloading and installing AHK..."
 	$webclient.DownloadFile( "http://ahkscript.org/download/ahk-install.exe", "$ENV:TEMP\ahk-install.exe" )
 	Start-Process "$ENV:TEMP\ahk-install.exe" "/S /U64"
+Write-Host "Downloading and installing AltDrag..."
+	$webclient.DownloadFile( "https://github.com/stefansundin/altdrag/releases/download/v1.0/AltDrag-1.0.exe", "$ENV:TEMP\AltDrag-1.0.exe" )
+	Start-Process "$ENV:TEMP\AltDrag-1.0.exe" "/S"
 Write-Host "Downloading and installing ProcessHacker..."
 	$webclient.DownloadFile( "http://processhacker.googlecode.com/files/processhacker-2.33-setup.exe", "$ENV:TEMP\processhacker-2.33-setup.exe" )
 	Start-Process "$ENV:TEMP\processhacker-2.33-setup.exe" "/SILENT"
