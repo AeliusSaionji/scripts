@@ -1,11 +1,6 @@
 ﻿#NoEnv
-;#HotkeyInterval 200 ;shouldnt be needed if not using volume
 #SingleInstance ignore
 coordmode , mouse , screen
-
-transtrue = 0
-alpha = 225
-Delay = 200               
 
 Loop {
 WinWait, Swipe finger ahk_class #32770
@@ -21,96 +16,24 @@ WinWait, Swipe finger ahk_class #32770
 	WinwaitClose
 }
 
-#Enter::
-	run, "C:\cygwin64\bin\mintty.exe" -i /Cygwin-Terminal.ico -
+Xbutton1 & Wheelup::ShiftAltTab
+Xbutton1 & WheelDown::AltTab
+
+; The magical bugfix. Needed because AHK is fucked up. Without this, mouse alttab will have issues.
+#IfWinActive , poop
+	Xbutton1::q
 return
 
-#b::
-	WinSet, Style, ^0xC40000, A
-return
+;#b::
+;	WinSet, Style, ^0xC40000, A
+;return
 
 ; Regular lockscreen is fine.
 ;#l::
 ;	 SendMessage, 0x112, 0xF140, 0,, Program Manager ; 0x112 is WM_SYSCOMMAND -- 0xF140 is SC_SCREENSAVE
 ;return
 
-; Eliminated in favor of AltDrag's "lower window"
-;RAlt & WheelDown::
-;	{
-;	alpha -= 5
-;	wingetactivetitle , trans
-;	winset , transparent , %alpha% , %trans%
-;	return
-;	} 
-
-;RAlt & Wheelup::
-;	{
-;	alpha += 5
-;	wingetactivetitle , trans
-;	winset , transparent , %alpha% , %trans%
-;	return
-;	} 
-
-RAlt & Mbutton::
-	if transtrue = 0
-	{
-		wingetactivetitle , trans
-		winset , transparent , 130 , %trans%
-		transtrue = 1
-		return
-	}
-	else
-	{
-		wingetactivetitle , trans
-		winset , transparent , 255 , %trans%
-		transtrue = 0
-		return
-	}
-
-#a::
-	{
-		wingetactivetitle , top
-		winset , AlwaysOnTop , Toggle , %top%
-		return
-	}
-
-;Xbutton1 & Rbutton::
-;	WinGetTitle , active , A
-;	WinGet , mize , minmax , %active%
-;	mousegetpos , sto1x , sto1y
-;	if sto1x < 0
-;	{
-;		if mize = 1
-;		{
-;			winrestore , %active%
-;		}
-;		Winmove , %active%, ,-1280 , 0
-;		Winmaximize , %active%
-;		return
-;	}
-;	else if (sto1x > 0 AND sto1x < 1280) 
-;	{
-;		if mize = 1
-;		{
-;			winrestore , %active%
-;		}
-;		Winmove , %active%, ,0 , 0
-;		Winmaximize, %active%
-;		return
-;	}
-;	else if sto1x > 1280
-;	{
-;		if mize = 1
-;		{
-;			winrestore , %active%
-;		}
-;		Winmove , %active%, ,1280 , 0
-;		Winmaximize, %active%
-;		return
-;	}
-;return
-
-;Aight this is for how windows usually works, disable this to work with active window under mouse like x11
+;This is for how windows usually works, disable this to work with active window under mouse like x11
 Xbutton1 & Lbutton::
 	{
 	WinGetTitle , active , A
@@ -119,7 +42,7 @@ Xbutton1 & Lbutton::
 	}
 return
 
-;enable for use with x11 mouse
+;Enable for use with x11 mouse
 /*
 ~Lbutton & Rbutton::
 	WinGetTitle , active , A
@@ -177,22 +100,3 @@ Xbutton1 & Lbutton up::
 		}
 		winmove , %active% , , sto1x , sto1y , sto3x , sto3y
 	return
-
-;^m::
-;	wingettitle , maxi , A
-;	Winmove , %maxi% , ,-1280 ,0 ,3840 ,1024
-
-
-Xbutton1 & Wheelup::ShiftAltTab
-Xbutton1 & WheelDown::AltTab
-
-;Xbutton1 & MButton::
-;	{
-;	send !0
-;	return
-;	}
-
-; The magical bugfix. Needed because AHK is fucked up. Without this, mouse alttab will have issues.
-#IfWinActive , poop
-	Xbutton1::q
-return
