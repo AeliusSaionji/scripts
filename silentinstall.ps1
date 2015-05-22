@@ -2,7 +2,6 @@
 # Configure internet explorer
 # AHK's UI ACCESS
 # Shortcuts to WinX
-# revo uninstaller
 # gvimx64, freecommander not covered here
 # set wallpaper
 # set taskbar settings
