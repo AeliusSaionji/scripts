@@ -2,8 +2,8 @@ MKDIR %HOMEDRIVE%\cygwin64\home\%USERNAME%
 
 IF %COMPUTERNAME% EQU NERV (
 	set My_Path=H:
-	COPY H:\GitHub\scripts\General.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
-	COPY H:\GitHub\scripts\rsyncd.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
+	COPY H:\GitHub\scripts\General.ps1.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
+	COPY H:\GitHub\scripts\rsyncd.bat.lnk "H:\Roaming\Microsoft\Windows\Start Menu\Programs\startup"
 	MKLINK /J "%HOMEDRIVE%\cygwin64\home\%USERNAME%\dcc" "H:\Downloads\dcc"
 	MKLINK /J "H:\Roaming\Mozilla\Firefox\Profiles\zvybsi3a.Link\searchplugins" "H:\GitHub\dotfiles\home\Link\.mozilla\searchplugins"
 	MKLINK /J "H:\Roaming\Mozilla\Firefox\Profiles\zvybsi3a.Link\requestpolicy" "H:\OneDrive\Misc Utils\Firefox backup\requestpolicy"
