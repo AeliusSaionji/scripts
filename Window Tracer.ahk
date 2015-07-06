@@ -64,8 +64,8 @@ Xbutton1 & Lbutton up::
 	}
 
 	if mize = 1
-		{
+	{
 		winrestore , %active%
-		}
-		winmove , %active% , , sto1x , sto1y , sto3x , sto3y
+	}
+	winmove , %active% , , sto1x , sto1y , sto3x , sto3y
 	return
