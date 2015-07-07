@@ -1,31 +1,26 @@
-﻿#NoEnv
+﻿;Link Satonaka
+#NoEnv
 #SingleInstance ignore
-coordmode , mouse , screen
+CoordMode, Mouse, Screen
 
-;This is for how windows usually works, disable this to work with active window under mouse like x11
-Xbutton1 & Lbutton::
-	{
-	WinGetTitle , active , A
-	WinGet , mize , minmax , %active%
-	mousegetpos , sto1x , sto1y
-	}
-return
+; Store the name of the active window before XButton1 is pressed.
+XButton1::
+{
+	WinGetTitle, active, A
+	SendInput {XButton1}
+	Return
+}
 
-;Enable for use with x11 mouse
-/*
-~Lbutton & Rbutton::
-	WinGetTitle , active , A
-	WinGet , mize , minmax , %active%
-return
+~XButton1 & LButton::
+{
+	WinGet, mize, MinMax, %active%
+	MouseGetPos, sto1x, sto1y
+	Return
+}
 
-Xbutton1 & Lbutton::
-	mousegetpos , sto1x , sto1y
-return
-*/
-;end x11
-
-Xbutton1 & Lbutton up::
-	mousegetpos , sto2x , sto2y
+~XButton1 & LButton up::
+{
+	MouseGetPos, sto2x, sto2y
 	sto3x := sto2x - sto1x
 	sto3y := sto2y - sto1y
 
@@ -35,10 +30,11 @@ Xbutton1 & Lbutton up::
 		sto3y := sto1y - sto2y
 		if mize = 1
 		{
-			winrestore , %active%
+			WinRestore, %active%
 		}
-		winmove , %active% , , sto2x , sto2y , sto3x , sto3y
-		return
+		WinMove, %active%,, sto2x, sto2y, sto3x, sto3y
+		WinActivate, %active%
+		Return
 	}
 
 	if sto3x < 0
@@ -46,10 +42,11 @@ Xbutton1 & Lbutton up::
 		sto3x := sto1x - sto2x
 		if mize = 1
 		{
-			winrestore , %active%
+			WinRestore, %active%
 		}
-		Winmove  , %active% , , sto2x , sto1y , sto3x , sto3y
-		return
+		WinMove, %active%,, sto2x, sto1y, sto3x, sto3y
+		WinActivate, %active%
+		Return
 	}
 
 	if sto3y < 0
@@ -57,15 +54,19 @@ Xbutton1 & Lbutton up::
 		sto3y := sto1y - sto2y
 		if mize = 1
 		{
-			winrestore , %active%
+			WinRestore, %active%
 		}
-		winmove , %active% , , sto1x , sto2y , sto3x , sto3y
-		return
+		WinMove, %active%,, sto1x, sto2y, sto3x, sto3y
+		WinActivate, %active%
+		Return
 	}
 
 	if mize = 1
 	{
-		winrestore , %active%
+		WinRestore, %active%
 	}
-	winmove , %active% , , sto1x , sto1y , sto3x , sto3y
-	return
+
+	WinMove, %active%,, sto1x, sto1y, sto3x, sto3y
+	WinActivate, %active%
+	Return
+}
