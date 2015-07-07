@@ -21,6 +21,7 @@
 CoordMode, Mouse, Screen
 
 ;Prevent XButton1 from operating on inactive windows under the cursor
+;	Likely unnecessary for any other modifier
 XButton1 up::
 {
 	SendInput {XButton1}
