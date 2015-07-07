@@ -1,5 +1,6 @@
 ﻿;Link Satonaka
 ;This script enables you to precisely resize and move a window in one mouse movement.
+;Video demonstration: http://1drv.ms/1H8zK8S
 
 ;The script operates on the active window. Hold down the modifier key
 ;(default: XButton1, the "back" button on many mice) and click the left
