@@ -19,8 +19,9 @@
 #SingleInstance ignore
 CoordMode, Mouse, Screen
 
-;Store the name of the active window before XButton1 is pressed.
+;Store the name of the active window before XButton1 is pressed
 ;	This step is taken because pressing XButton1 can cause the active window to lose focus
+;	If you use X11 mouse hover activation logic, you'll have to hold your modifier before you move the mouse
 XButton1::
 {
 	WinGetTitle, active, A
