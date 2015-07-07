@@ -14,31 +14,29 @@
 
 ;XButton1 is the modifier, you can change it to whatever you wish. 
 ;	Just replace every reference of XButton1 to the desired modifier key.
+;	If you use X11 mouse hover activation logic, you'll have to hold your modifier before you move the mouse
 
 #NoEnv
 #SingleInstance ignore
 CoordMode, Mouse, Screen
 
-;Store the name of the active window before XButton1 is pressed
-;	This step is taken because pressing XButton1 can cause the active window to lose focus
-;	If you use X11 mouse hover activation logic, you'll have to hold your modifier before you move the mouse
-XButton1::
+;Prevent XButton1 from operating on inactive windows under the cursor
+XButton1 up::
 {
-	WinGetTitle, active, A
 	SendInput {XButton1}
-	Return
 }
 
 ;Grab the first coordinate of the traced rectangle
-~XButton1 & LButton::
+XButton1 & LButton::
 {
+	WinGetTitle, active, A
 	WinGet, mize, MinMax, %active%
 	MouseGetPos, sto1x, sto1y
 	Return
 }
 
 ;Grab the second coordinate of the traced rectangle, move and resize the window as necessary
-~XButton1 & LButton up::
+XButton1 & LButton up::
 {
 	MouseGetPos, sto2x, sto2y
 	sto3x := sto2x - sto1x
