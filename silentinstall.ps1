@@ -1,6 +1,4 @@
 # Todo
-# Configure internet explorer
-# AHK's UI ACCESS
 # Make computer agnostic
 # Shortcuts to WinX
 # gvimx64, freecommander not covered here
@@ -8,28 +6,31 @@
 # set taskbar settings
 # hide desktop icons
 # Import regs
-# putty shortcut, or other means of ssh
+# update for altdrag
+		#Start-Process -FilePath "$ENV:TEMP\AltDrag-1.0.exe" -ArgumentList "/S"
 
 
 # Check for Administrator
 if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") ) {
-	Write-Host "Updating Shell Paths"
-	Write-Warning "Downloads, Saved Games, and Searches must be set manually, probably."
+	#Write-Host "Updating Shell Paths"
+	#Write-Warning "Downloads, Saved Games, and Searches must be set manually, probably."
 	# Replace with WASP?
-		$key1 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
-		$key2 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
-		set-ItemProperty -path $key1 -name AppData "H:\Roaming"
-		set-ItemProperty -path $key2 -name AppData "H:\Roaming"
-		set-ItemProperty -path $key1 -name Desktop "H:\Desktop"
-		set-ItemProperty -path $key2 -name Desktop "H:\Desktop"
-		set-ItemProperty -path $key1 -name "My Music" "H:\Music"
-		set-ItemProperty -path $key2 -name "My Music" "H:\Music"
-		set-ItemProperty -path $key1 -name "My Pictures" "H:\Pictures"
-		set-ItemProperty -path $key2 -name "My Pictures" "H:\Pictures"
-		set-ItemProperty -path $key1 -name "My Video" "H:\Videos"
-		set-ItemProperty -path $key2 -name "My Video" "H:\Videos"
-		set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
-		set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
+		#$key1 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+		#$key2 = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
+		#set-ItemProperty -path $key1 -name AppData "H:\Roaming"
+		#set-ItemProperty -path $key2 -name AppData "H:\Roaming"
+		#set-ItemProperty -path $key1 -name Desktop "H:\Desktop"
+		#set-ItemProperty -path $key2 -name Desktop "H:\Desktop"
+		#set-ItemProperty -path $key1 -name "My Music" "H:\Music"
+		#set-ItemProperty -path $key2 -name "My Music" "H:\Music"
+		#set-ItemProperty -path $key1 -name "My Pictures" "H:\Pictures"
+		#set-ItemProperty -path $key2 -name "My Pictures" "H:\Pictures"
+		#set-ItemProperty -path $key1 -name "My Video" "H:\Videos"
+		#set-ItemProperty -path $key2 -name "My Video" "H:\Videos"
+		#set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
+		#set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
+	Write-Host "Running cygwin setup..."
+	./cygupdate.ps1
 	# Restart as Administrator
 	$getdir = Get-Location
 	Start-Process powershell.exe -ArgumentList "$getdir\silentinstall.ps1" -Verb Runas
@@ -50,9 +51,6 @@ else {
 	Write-Host "Downloading and installing sumatrapdf..."
 		Invoke-WebRequest -UseBasicParsing -Uri "https://kjkpub.s3.amazonaws.com/sumatrapdf/rel/SumatraPDF-3.0-install.exe" -OutFile "$ENV:TEMP\SumatraPDF-3.0-install.exe"
 		Start-Process -FilePath "$ENV:TEMP\SumatraPDF-3.0-install.exe" -ArgumentList "/s /register"
-	Write-Host "Downloading and installing AltDrag..."
-		Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/stefansundin/altdrag/releases/download/v1.0/AltDrag-1.0.exe" -OutFile "$ENV:TEMP\AltDrag-1.0.exe"
-		Start-Process -FilePath "$ENV:TEMP\AltDrag-1.0.exe" -ArgumentList "/S"
 	Write-Host "Downloading and installing ProcessHacker..."
 		Invoke-WebRequest -UseBasicParsing -Uri "http://processhacker.googlecode.com/files/processhacker-2.33-setup.exe" -OutFile "$ENV:TEMP\processhacker-2.33-setup.exe"
 		Start-Process -FilePath "$ENV:TEMP\processhacker-2.33-setup.exe" -ArgumentList "/SILENT"
@@ -79,13 +77,13 @@ else {
 	
 	Write-Host "Hamachi's MSI is retarded, don't use it. In addition to not working, it pings google every time you install it"
 	
-	Write-Host "Downloading and installing Honeyview, Vistaswitcher, and Vtuploader..."
+	Write-Host "Downloading and installing Honeyview, and Vtuploader..."
 	Write-Warning "Firefox, foobar2000, Geforce Experience, GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
 		Invoke-WebRequest -UseBasicParsing -Uri "https://download-installer.cdn.mozilla.net/pub/firefox/releases/38.0.1/win32/en-US/Firefox%20Setup%20Stub%2038.0.1.exe" -OutFile "$ENV:TEMP\Firefox Setup Stub 38.0.1.exe"
 	#	Invoke-WebRequest -UseBasicParsing -Uri "http://www.foobar2000.org/getfile/5ade2dfcc3b9483f33cfff60cf8189e7/foobar2000_v1.3.8.exe" -OutFile "$ENV:TEMP\foobar2000_v1.3.8.exe"
 		Invoke-WebRequest -UseBasicParsing -Uri "http://us.download.nvidia.com/GFE/GFEClient/2.4.3.31/GeForce_Experience_v2.4.3.31.exe" -OutFile "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe"
 		Invoke-WebRequest -UseBasicParsing -Uri "http://www.bandisoft.com/honeyview/dl.php?web" -OutFile "$ENV:TEMP\honeyview.exe"
-		Invoke-WebRequest -UseBasicParsing -Uri "http://download01.logitech.com/web/ftp/pub/techsupport/gaming/LGS_8.58.183_x64_Logitech.exe" -OutFile "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe"
+	#	Invoke-WebRequest -UseBasicParsing -Uri "http://download01.logitech.com/web/ftp/pub/techsupport/gaming/LGS_8.58.183_x64_Logitech.exe" -OutFile "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe"
 		Invoke-WebRequest -UseBasicParsing -Uri "http://6d249e2930674d9a0246-22b39505feb4cbdca036d208d587baec.r76.cf1.rackcdn.com/RevoUninProSetup.exe" -OutFile "$ENV:TEMP\RevoUninProSetup.exe"
 		Invoke-WebRequest -UseBasicParsing -Uri "https://www.virustotal.com/static/bin/vtuploader2.2.exe" -OutFile "$ENV:TEMP\vtuploader2.2.exe"
 	
@@ -94,7 +92,7 @@ else {
 	#	Start-Process -FilePath "$ENV:TEMP\foobar2000_v1.3.8.exe"
 		Start-Process -FilePath "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe"
 		Start-Process -FilePath "$ENV:TEMP\honeyview.exe"
-		Start-Process -FilePath "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe"
+	#	Start-Process -FilePath "$ENV:TEMP\LGS_8.58.183_x64_Logitech.exe"
 		Start-Process -FilePath "$ENV:TEMP\RevoUninProSetup.exe"
 		Start-Process -FilePath "$ENV:TEMP\vtuploader2.2.exe"
 }
