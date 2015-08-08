@@ -1,7 +1,6 @@
 # Todo
 # Make computer agnostic
-# Shortcuts to WinX
-# gvimx64, freecommander not covered here
+# Shortcuts to WinX # gvimx64, freecommander not covered here
 # set wallpaper
 # set taskbar settings
 # hide desktop icons
@@ -29,11 +28,23 @@ if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 		#set-ItemProperty -path $key2 -name "My Video" "H:\Videos"
 		#set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
 		#set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
-	Write-Host "Running cygwin setup..."
-	Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/cygupdate.ps1" -OutFile "$ENV:TEMP\cygupdate.ps1"
-	$ENV:TEMP\cygupdate.ps1
-	Write-Host "downloading git clone script to /tmp"
-	Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/gitclonehome.sh" -OutFile "C:\cygwin64\tmp\gitclonehome.sh"
+	#set path for script
+	$newpath = $ENV:PATH + "C:\cygwin64\bin;";
+	$ENV:PATH = $newpath
+	#Set path for user (persistent)
+	setx PATH $newpath
+	Write-Host "Downloading and installing cygwin..."
+	Invoke-WebRequest -UseBasicParsing -Uri "https://cygwin.com/setup-x86_64.exe" -OutFile "$Env:USERPROFILE\Downloads\setup-x86_64.exe"
+	Start-Process "$Env:USERPROFILE\Downloads\setup-x86_64.exe" "--no-admin --quiet-mode -g -d -o -l c:\cygwin64\tmp -P irssi,openssh,curl,rsync,zsh,git,make,perl-Text-CharWidth,perl-Algorithm-Diff -s http://mirrors.kernel.org/sourceware/cygwin/"
+	if ( $ENV:COMPUTERNAME -NOTMATCH "NERV" ) {
+		Write-Host "cloning git"
+		New-Item -Path C:\Users\Link -ItemType Directory -Name Github
+		Set-Location -Path C:\Users\Link\Github
+		#The following relies on cygwin bin being in path
+		Start-Process -FilePath "C:\cygwin64\bin\git" -ArgumentList "clone https://github.com/Link-Satonaka/scripts.git"
+		Start-Process -FilePath "C:\cygwin64\bin\git" -ArgumentList "clone https://github.com/Link-Satonaka/dotfiles.git"
+		Start-Process -FilePath "C:\cygwin64\bin\git" -ArgumentList "clone https://github.com/Link-Satonaka/practice.git"
+	}
 	# Restart as Administrator
 	$getdir = Get-Location
 	Start-Process powershell.exe -ArgumentList "$getdir\silentinstall.ps1" -Verb Runas
