@@ -30,8 +30,10 @@ if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 		#set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
 		#set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
 	Write-Host "Running cygwin setup..."
-	Invoke-WebRequest -UseBasicParcing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/cygupdate.ps1" -OutFile "$ENV:TEMP\cygupdate.ps1"
+	Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/cygupdate.ps1" -OutFile "$ENV:TEMP\cygupdate.ps1"
 	$ENV:TEMP\cygupdate.ps1
+	Write-Host "downloading git clone script to /tmp"
+	Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/gitclonehome.sh" -OutFile "C:\cygwin64\tmp\gitclonehome.sh"
 	# Restart as Administrator
 	$getdir = Get-Location
 	Start-Process powershell.exe -ArgumentList "$getdir\silentinstall.ps1" -Verb Runas
