@@ -45,6 +45,10 @@ if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 		Start-Process -FilePath "C:\cygwin64\bin\git" -ArgumentList "clone https://github.com/Link-Satonaka/dotfiles.git"
 		Start-Process -FilePath "C:\cygwin64\bin\git" -ArgumentList "clone https://github.com/Link-Satonaka/practice.git"
 	}
+	Write-Host "Downloading mpv and youtube-dl"
+	New-Item -Path $ENV:APPDATA\mpv -ItemType Directory -Name mpv
+	Invoke-WebRequest -UseBasicParsing -Uri "http://mpv.srsfckn.biz/mpv-x86_64-latest.7z" -OutFile "$Env:USERPROFILE\Downloads\mpv-x86_64-latest.7z"
+	Invoke-WebRequest -UseBasicParsing -Uri "https://yt-dl.org/downloads/2015.08.06.1/youtube-dl.exe" -OutFile "$ENV:APPDATA\mpv\youtube-dl.exe"
 	# Restart as Administrator
 	$getdir = Get-Location
 	Start-Process powershell.exe -ArgumentList "$getdir\silentinstall.ps1" -Verb Runas
