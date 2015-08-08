@@ -30,7 +30,8 @@ if ( -NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 		#set-ItemProperty -path $key1 -name "Personal" "H:\OneDrive\Documents"
 		#set-ItemProperty -path $key2 -name "Personal" "H:\OneDrive\Documents"
 	Write-Host "Running cygwin setup..."
-	./cygupdate.ps1
+	Invoke-WebRequest -UseBasicParcing -Uri "https://raw.githubusercontent.com/Link-Satonaka/scripts/master/cygupdate.ps1" -OutFile "$ENV:TEMP\cygupdate.ps1"
+	$ENV:TEMP\cygupdate.ps1
 	# Restart as Administrator
 	$getdir = Get-Location
 	Start-Process powershell.exe -ArgumentList "$getdir\silentinstall.ps1" -Verb Runas
@@ -52,23 +53,19 @@ else {
 		Invoke-WebRequest -UseBasicParsing -Uri "https://kjkpub.s3.amazonaws.com/sumatrapdf/rel/SumatraPDF-3.0-install.exe" -OutFile "$ENV:TEMP\SumatraPDF-3.0-install.exe"
 		Start-Process -FilePath "$ENV:TEMP\SumatraPDF-3.0-install.exe" -ArgumentList "/s /register"
 	Write-Host "Downloading and installing ProcessHacker..."
-		Invoke-WebRequest -UseBasicParsing -Uri "http://processhacker.googlecode.com/files/processhacker-2.33-setup.exe" -OutFile "$ENV:TEMP\processhacker-2.33-setup.exe"
-		Start-Process -FilePath "$ENV:TEMP\processhacker-2.33-setup.exe" -ArgumentList "/SILENT"
+		Invoke-WebRequest -UseBasicParsing -Uri "http://wj32.org/processhacker/rel/processhacker-2.36-setup.exe" -OutFile "$ENV:TEMP\processhacker-2.36-setup.exe"
+		Start-Process -FilePath "$ENV:TEMP\processhacker-2.36-setup.exe" -ArgumentList "/SILENT"
 	Write-Host "Downloading and installing Steam..."
 		Invoke-WebRequest -UseBasicParsing -Uri "http://media.steampowered.com/client/installer/SteamSetup.exe" -OutFile "$ENV:TEMP\SteamSetup.exe"
 		Start-Process -FilePath "$ENV:TEMP\SteamSetup.exe" -ArgumentList "/S"
 	Write-Host "Downloading and installing directx..."
 		Invoke-WebRequest -UseBasicParsing -Uri "http://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe" -OutFile "$ENV:TEMP\dxwebsetup.exe"
 		Start-Process -FilePath "$ENV:TEMP\dxwebsetup.exe" -ArgumentList "/Q"
-	#Write-Host "Downloading and installing MPC-HC..." # x86 for SVP
-	#	Start-Process -FilePath "$ENV:TEMP\MPC-HC_v1.7.8_x64.exe" -ArgumentList "/SILENT"
 	#Write-Host "Downloading and installing Ditto..."
 	#	Start-Process -FilePath "$ENV:TEMP\DittoSetup_64bit_3_20_54_0.exe" -ArgumentList "/SILENT"
-	# Write-Host "Downloading and installing irfanview 4.38..."
-	#	Start-Process -FilePath "$ENV:TEMP\irfanview438.exe" -ArgumentList "/silent /group=1 /allusers=1 /assocallusers=1"
 	Write-Host "Downloading and installing Audacity"
-		Invoke-WebRequest -UseBasicParsing -Uri "http://www.fosshub.com/Audacity.html/audacity-win-2.1.0.exe" -OutFile "$ENV:TEMP\audacity-win-2.1.0.exe"
-		Start-Process -FilePath "$ENV:TEMP\audacity-win-2.1.0.exe" -ArgumentList "/VERYSILENT"
+		Invoke-WebRequest -UseBasicParsing -Uri "http://download.fosshub.com/Protected/expiretime=1439058121;badurl=aHR0cDovL3d3dy5mb3NzaHViLmNvbS9BdWRhY2l0eS5odG1s/06afc40e71b547e033920dc1162b580ef096a6ac768979f0e429a8337fb940c1/Audacity/audacity-win-2.1.1.exe" -OutFile "$ENV:TEMP\audacity-win-2.1.1.exe"
+		Start-Process -FilePath "$ENV:TEMP\audacity-win-2.1.1.exe" -ArgumentList "/VERYSILENT"
 	Write-Host "Downloading and installing paint.net..."
 		Invoke-WebRequest -UseBasicParsing -Uri "http://www.dotpdn.com/files/paint.net.4.0.5.install.zip" -OutFile "$ENV:TEMP\paint.net.4.0.5.install.zip"
 		Add-Type -assembly "system.io.compression.filesystem"
@@ -78,7 +75,7 @@ else {
 	Write-Host "Hamachi's MSI is retarded, don't use it. In addition to not working, it pings google every time you install it"
 	
 	Write-Host "Downloading and installing Honeyview, and Vtuploader..."
-	Write-Warning "Firefox, foobar2000, Geforce Experience, GitHub, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
+	Write-Warning "Firefox, foobar2000, Geforce Experience, Honeyview, Vistaswitcher, and Vtuploader don't have silent installs"
 		Invoke-WebRequest -UseBasicParsing -Uri "https://download-installer.cdn.mozilla.net/pub/firefox/releases/38.0.1/win32/en-US/Firefox%20Setup%20Stub%2038.0.1.exe" -OutFile "$ENV:TEMP\Firefox Setup Stub 38.0.1.exe"
 	#	Invoke-WebRequest -UseBasicParsing -Uri "http://www.foobar2000.org/getfile/5ade2dfcc3b9483f33cfff60cf8189e7/foobar2000_v1.3.8.exe" -OutFile "$ENV:TEMP\foobar2000_v1.3.8.exe"
 		Invoke-WebRequest -UseBasicParsing -Uri "http://us.download.nvidia.com/GFE/GFEClient/2.4.3.31/GeForce_Experience_v2.4.3.31.exe" -OutFile "$ENV:TEMP\GeForce_Experience_v2.4.3.31.exe"
