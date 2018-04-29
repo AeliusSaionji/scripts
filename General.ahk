@@ -2,20 +2,6 @@
 #SingleInstance ignore
 coordmode , mouse , screen
 
-Loop {
-WinWait, Swipe finger ahk_class #32770
-	{
-	    ;WinMinimize, ahk_class MozillaWindowClass
-	    WinMinimize
-	    ;Sendinput #d
-	    Sleep 200
-	    ;Sendinput #d
-	    ;Sleep 200
-	    WinActivate
-	}
-	WinwaitClose
-}
-
 Xbutton1 & Wheelup::ShiftAltTab
 Xbutton1 & WheelDown::AltTab
 
