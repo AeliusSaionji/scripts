@@ -64,5 +64,5 @@ $bytesAdmin = [System.Text.Encoding]::Unicode.GetBytes($cumulativeCmdAdmin)
 $bytes      = [System.Text.Encoding]::Unicode.GetBytes($cumulativeCmd)
 $encodedCommandAdmin = [Convert]::ToBase64String($bytesAdmin)
 $encodedCommand      = [Convert]::ToBase64String($bytes)
-Start-Process "powershell.exe" "-WindowStyle Hidden -EncodedCommand $encodedCommandAdmin" -Verb RunAs -Wait
-Start-Process "powershell.exe" "-WindowStyle Hidden -EncodedCommand $encodedCommand"
+Start-Process "powershell.exe" "-NoProfile -WindowStyle Hidden -EncodedCommand $encodedCommandAdmin" -Verb RunAs -Wait
+Start-Process "powershell.exe" "-NoProfile -WindowStyle Hidden -EncodedCommand $encodedCommand"
